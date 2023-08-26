@@ -29,8 +29,8 @@ public class ResultService {
 			.flatMap(acknowledgableConsumerRecord -> {
 				String message = acknowledgableConsumerRecord.value();
 				String key = acknowledgableConsumerRecord.key();
-				log.info("Received message with UUID: " + key);
-				log.info("Received message: " + message);
+				// log.info("Received message with UUID: " + key);
+				// log.info("Received message: " + message);
 				if (message.startsWith("INPUT:")) {
 					// 데이터 형식이 올바른지 검사
 					if (!message.matches("^INPUT:\\d+,\\d+$")) {
@@ -39,7 +39,7 @@ public class ResultService {
 					String[] numbers = message.replace("INPUT:", "").split(",");
 					Integer sum = Integer.parseInt(numbers[0]) * Integer.parseInt(numbers[1]);
 					String outputMessage = "OUTPUT:" + sum;
-					log.info("Output: " + sum);
+					// log.info("Output: " + sum);
 					return Flux.just("UUID: " + key + ", Processed message: " + message + ", Output: " + sum);
 				} else {
 					return Flux.just("Invalid message format: " + message);

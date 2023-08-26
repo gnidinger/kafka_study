@@ -33,8 +33,8 @@ public class KafkaController {
 		Integer number1 = numbers.get("number1");
 		Integer number2 = numbers.get("number2");
 		String key = uuid.toString();
-		String message = "UUID" + uuid.toString() + ", INPUT:" + number1 + "," + number2;
-		log.info(message);
+		String message = "INPUT:" + number1 + "," + number2;
+		log.info("UUID: " + uuid.toString() +  ", "+ message);
 
 		return kafkaService.sendMessage(topicName, key, message);
 	}
