@@ -1,31 +1,41 @@
 package com.example.kafka.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.kafka.entity.AddRequest;
 import com.example.kafka.service.KafkaService;
 
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class KafkaController {
 
 	private final KafkaService kafkaService;
+	private final String topicName = "test-topic";
 
-	@PostMapping("/send")
-	public Mono<Void> sendSum(@RequestBody AddRequest addRequest) {
-		return kafkaService.sendSum(addRequest.getA(), addRequest.getB());
+	@PostMapping("/kafka/sendNumbers")
+	public Mono<Void> sendNumbers(@RequestBody Map<String, Integer> numbers) {
+
+		UUID uuid = UUID.randomUUID();
+
+		log.info("[SEND NUMBERS TO KAFKA]");
+		Integer number1 = numbers.get("number1");
+		Integer number2 = numbers.get("number2");
+		String key = uuid.toString();
+		String message = "UUID" + uuid.toString() + ", INPUT:" + number1 + "," + number2;
+		log.info(message);
+
+		return kafkaService.sendMessage(topicName, key, message);
 	}
-
-	@GetMapping("/receive")
-	public Flux<String> receiveSum() {
-		return kafkaService.receiveSum();
-	}
-
 }
